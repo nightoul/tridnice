@@ -1,0 +1,125 @@
+
+1. signup a login views sjednoceni:
+  - one users contoller vs 2 models OR 2 controllers, 2 models but one templates folder 
+  - tutors extends schools controller + include of tutor views?
+
+2. localization
+
+- language do session az po loginu, before login JS handles it?
+- lokalizace contentu: PHP nebo JS? kombinace obojiho? err & flash msgs je jasny PHP ale content?
+- err a flash msgs asi nebude uzivatel sam definovat, stejne tak vetsinu contentu. co tim myslel jinyho?
+
+3. JS 
+- prepsat JS echo access php attendance array
+- JS sendMonth - remapping month vals. also JS scripts jsou duplicated nejde mi je nacist ze src
+
+4. DUPLICATE JS
+1. courses/index & directors/index
+2. records/updaterecord & records/showrecord
+3. preselect tabs in users/signup & users/login
+
+
+
+LATER
+
+email confirmation & send school token by email
+courses/create vyplnte jmena studentu
+dopsat komenty k metodam
+presunuti kurzu na jiny den
+nastudovat ajax na simpler projektu + ajax pagination - ajax posle parameter do records/directors?
+
+
+
+===================================================================================
+LOCALIZATION OF CONTENT
+
+1. lang select is in header modal (form GET)
+2. use echo "<script> location.reload(); </script>"
+3. put into session from GET
+4. if session lang = cz, load from db
+5. db structure: table languages, row one cz, fields are routes, json obj is one route (dont forget page titles)
+6. on a given page load only one json
+7. pass json from php to js
+8. in js use data attributes and textcontent
+9. implement all into localization class, maybe zrusit arrays and put all in db
+
+
+https://www.youtube.com/watch?v=OKU08dWK8BA - steve griffith
+https://www.youtube.com/watch?v=eDeEQd_m9bI - other vid
+
+- poresit html lang attr in header
+- config: site name
+
+
+CODE
+
+
+<!-- DESKTOP NAVIGATION -->
+
+<nav class="nav-wrapper blue darken-4">
+  <div class="container">
+    <a href="<?= URLROOT; ?>" class="brand-logo"><?= SITENAME; ?></a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+
+    <?php if(isset($_SESSION['school_id']) && isset($_SESSION['tutor_id'])) : ?>
+
+      <li><a class="modal-trigger" href="#select-language">Change Language (<?= $_SESSION['language'] ?>)</a></li>
+      <li><a href="<?= URLROOT;?>/users/changetutorpass">Change password</a></li>
+      <li><a href="<?= URLROOT;?>/users/logout">Logout</a></li>
+    
+    <?php elseif (isset($_SESSION['school_id'])) : ?>
+
+      <li><a class="modal-trigger" href="#select-language">Change Language (<?= $_SESSION['language'] ?>)</a></li>
+      <li><a href="<?= URLROOT;?>/users/changeschoolpass">Change Password</a></li>
+      <li><a href="<?= URLROOT;?>/users/logout">Logout</a></li>
+
+    <?php else : ?>
+
+      <li><a class="modal-trigger" href="#select-language">Change Language (<?= $_SESSION['language'] ?>)</a></li>
+      <li><a href="<?= URLROOT;?>/users/login">Login</a></li>
+      <li><a href="<?= URLROOT; ?>/users/signup">Sign up</a></li>
+
+    <?php endif; ?>
+
+    </ul>
+  </div>
+</nav>
+
+<!-- SELECT LANGUAGE MODAL -->
+
+<div class="modal customcss--languages-modal" id="select-language">
+  <div class="modal-content">
+    <h4>Select your language</h4>
+    <form action="<?= URLROOT; ?>/home/chooselanguage" method="GET" >
+      <label>
+        <input class="with-gap" name="language" value="cz" type="radio" <?= ($_SESSION['language'] == 'cz') ? 'checked' : '' ?> />
+        <span>Czech</span>
+      </label>
+      <label>
+        <input class="with-gap" name="language" value="en" type="radio" <?= ($_SESSION['language'] == 'en') ? 'checked' : '' ?> />
+        <span>English</span>
+      </label>
+      <button type="submit" class="btn-large waves-effect waves-light right" name="submit" >Apply language</button>
+    </form>
+  </div>
+</div>
+
+
+
+
+
+
+
+IN HOME CONTROLLER
+public function chooselanguage(){
+
+    if(isset($_GET['submit'])) {
+      $_SESSION['language'] = $_GET['language'];
+
+      // call flash message
+      Flash::set_flash_message('success', 'success_choose_language');
+
+      // redirect to homepage (if logged in, Home controller redirects again to logged-in homepage)
+      redirect('home');
+    }
+  }
