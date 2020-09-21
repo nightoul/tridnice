@@ -93,35 +93,29 @@ class Course extends Model {
     $this->conn->execute();
   }
 
-  /******************* STUDENTS TABLE **********************/
-  public function get_student_ids($data){
+  /******************* DIRECTOR PAGE: GET COURSES JOINED WITH TUTORS **********************/
 
-    $this->conn->query('SELECT student_id FROM students WHERE course_id = :course_id
-      ORDER BY student_id ASC');
-    $this->conn->bind(':course_id', $data['course_id']);
+  public function get_tutors_and_courses($school_id, $start_pos, $limit){
 
+    $this->conn->query("SELECT CONCAT (t.tutor_last_name, ' ', t.tutor_first_name) AS tutor_name,
+    c.course_id, c.course_name, c.course_day,
+    DATE_FORMAT(c.starts_at, '%H:%i') AS starts_at, DATE_FORMAT(c.ends_at, '%H:%i') AS ends_at
+    FROM tutors AS t INNER JOIN courses AS c ON t.tutor_id = c.tutor_id
+    WHERE t.school_id = '$school_id' && c.school_id = '$school_id'
+    ORDER BY tutor_last_name ASC
+    LIMIT $start_pos, $limit");
+    $this->conn->execute();
     $rows = $this->conn->fetch_all();
 
-    foreach($rows as $row) {
-      $student_ids[] = $row['student_id'];
-    }
-
-    return $student_ids;
+    return $rows;
   }
 
-  public function save_students($data){
+  public function count_courses($school_id){
 
-    for($i=0;$i<$data['num_of_students'];$i++) {
+    $this->conn->query("SELECT * FROM courses WHERE school_id = '$school_id'");
+    $this->conn->fetch_all();
+    $row_count = $this->conn->count_rows();
 
-      $this->conn->query('INSERT INTO students (school_id, course_id, student_first_name, student_last_name)
-      VALUES (:school_id, :course_id, :student_first_name, :student_last_name)');
-      $this->conn->bind(':school_id', $data['school_id']);
-      $this->conn->bind(':course_id', $data['course_id']);
-      $this->conn->bind(':student_first_name', $data["student{$i}first_name"]);
-      $this->conn->bind(':student_last_name', $data["student{$i}last_name"]);
-
-      // execute
-      $this->conn->execute();
-    }
+    return $row_count;
   }
 }

@@ -15,3 +15,6 @@ define('URLROOT', 'http://localhost/tridnice');
 
 // site name
 define('SITENAME', 'Class Register');
+
+// other constants
+define('WEEK', 606800); // week has 604800 seconds but the value was increased to be on the safe side

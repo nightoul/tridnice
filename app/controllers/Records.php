@@ -4,8 +4,10 @@ class Records extends Controller {
 
   public function __construct (){
 
-      $this->record_model = $this->model('Record');
       $this->course_model = $this->model('Course');
+      $this->student_model = $this->model('Student');
+      $this->attendance_model = $this->model('Attendance');
+      $this->tutor_record_model = $this->model('TutorRecord');
   }
 
   /* ************** DIRECTORS: SHOW RECORD **************************** */
@@ -64,14 +66,14 @@ class Records extends Controller {
       /* ***************** INSERT/UPDATE *********************** */
 
       // check for first entry
-      if(!$this->record_model->count_rows_attendance($data)) {
+      if(!$this->attendance_model->count_rows_attendance($data)) {
         // if attendance for this month is empty, insert data for new month
-          $this->record_model->save_attendance($data);
-          $this->record_model->save_tutor_records($data);
+          $this->attendance_model->save_attendance($data);
+          $this->tutor_record_model->save_tutor_records($data);
       } else {
         // else update presence in existing month
-          $this->record_model->update_attendance($data);
-          $this->record_model->update_tutor_records($data);
+          $this->attendance_model->update_attendance($data);
+          $this->tutor_record_model->update_tutor_records($data);
       }
 
       // redirect to courses index
@@ -137,17 +139,17 @@ class Records extends Controller {
     /* *******************  GET STUDENTS FROM DATABASE  ********************** */
 
     // get student ids & prepare for view
-    $student_ids = $this->record_model->get_student_ids($course_id);
+    $student_ids = $this->student_model->get_student_ids($course_id);
     $data['student_ids'] = $student_ids;
 
     // get student names mapped to ids & prepare for view
-    $student_names = $this->record_model->get_student_names($student_ids);
+    $student_names = $this->student_model->get_student_names($student_ids);
     foreach ($student_names as $student_name) {
       $data['student_names'][] = $student_name['student_name'];
     }
 
     // get student attendance mapped to ids & prepare for view (JSON)
-    $attendance_raw = $this->record_model->get_attendance($data);
+    $attendance_raw = $this->attendance_model->get_attendance($data);
     foreach($attendance_raw as $attendance_raw_sg) {
       $data['attendance'][] = array_column($attendance_raw_sg, 'presence');
     }
@@ -155,7 +157,7 @@ class Records extends Controller {
     /* *******************  GET TUTOR RECORDS FROM DATABASE  ********************** */
 
     // get records
-    $tutor_records = $this->record_model->get_tutor_records($data);
+    $tutor_records = $this->tutor_record_model->get_tutor_records($data);
 
     // prepare data for view: tutor records
     foreach($tutor_records as $tutor_record) {
@@ -176,12 +178,11 @@ class Records extends Controller {
     $end_date = $end_date->modify("last $day of this month")->format('U');
     
     // get number of lessons in selected month
-    define('WEEK', 606800); // week has 604800 seconds but the value was increased to be safe
     $num_of_lessons = 1;
     $from = $start_date;
     
     while ($from <= $end_date) {
-      $from += WEEK;
+      $from += WEEK; // WEEK is a constant from config
       $num_of_lessons++;
     }
     

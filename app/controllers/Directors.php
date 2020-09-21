@@ -8,7 +8,7 @@ class Directors extends Controller {
     if(!AccessControl::is_logged_in_school()) {
       redirect('users/login');
     } else {
-      $this->director_model = $this->model('Director');
+      $this->course_model = $this->model('Course');
     }
   }
 
@@ -30,10 +30,10 @@ class Directors extends Controller {
 
     // get tutors and their courses
     $data['tutors_and_courses'] = 
-      $this->director_model->get_tutors_and_courses($school_id, $start_pos, $limit);
+      $this->course_model->get_tutors_and_courses($school_id, $start_pos, $limit);
 
     // get number of courses for this school
-    $num_of_courses = $this->director_model->count_courses($school_id);
+    $num_of_courses = $this->course_model->count_courses($school_id);
 
     // calculate number of pages
     $num_of_pages = ceil($num_of_courses / $limit);
