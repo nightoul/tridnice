@@ -17,7 +17,7 @@ class Directors extends Controller {
     /* ******************* SHOW TUTORS AND COURSES (PAGINATION) **************** */
 
     // get school id
-    $school_id = $_SESSION['school_id'];
+    $school_id = $_SESSION['user_id'];
 
     // set current page from query string
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;

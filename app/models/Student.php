@@ -33,9 +33,9 @@ class Student extends Model {
 
     for($i=0;$i<$data['num_of_students'];$i++) {
 
-      $this->conn->query('INSERT INTO students (school_id, course_id, student_first_name, student_last_name)
-      VALUES (:school_id, :course_id, :student_first_name, :student_last_name)');
-      $this->conn->bind(':school_id', $data['school_id']);
+      $this->conn->query('INSERT INTO students (school_token, course_id, student_first_name, student_last_name)
+      VALUES (:school_token, :course_id, :student_first_name, :student_last_name)');
+      $this->conn->bind(':school_token', $data['school_token']);
       $this->conn->bind(':course_id', $data['course_id']);
       $this->conn->bind(':student_first_name', $data["student{$i}first_name"]);
       $this->conn->bind(':student_last_name', $data["student{$i}last_name"]);

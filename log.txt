@@ -1,12 +1,16 @@
 
-1a. signup a login views sjednoceni:
-  - one users contoller vs 2 models OR 2 controllers, 2 models but one templates folder 
-  - tutors extends schools controller + include of tutor views?
 
 https://en.wikipedia.org/wiki/Role-based_access_control
 users rights system design
 
 
+- prepsat session school id tutor id atd na user id a pridat user type do seesions
+- sjednotit register school register tutor na signup, mozna totez u loginu
+- in model: rename register_school etc na signup_school
+
+courses/create: is it neccessary to have fn get student ids?
+
+- prepsat pwd na password?
 - two views updaterecord and showrecord? 
 
 2. localization

@@ -3,8 +3,7 @@
 class Users extends Controller {
 
   public function __construct() {
-    $this->school_model = $this->model('School');
-    $this->tutor_model = $this->model('Tutor');
+    $this->user_model = $this->model('User');
   }
 
 
@@ -38,6 +37,7 @@ class Users extends Controller {
       
       // get user input data
       $data = [
+        'user_type' => 'school',
         'school_name' => trim($_POST['school_name']),
         'school_email' => trim($_POST['school_email']),
         'school_pwd' => trim($_POST['school_pwd']),
@@ -54,7 +54,7 @@ class Users extends Controller {
         $data['err_school_email'] = Localization::localize_message('error', 'err_email');
         } elseif (!filter_var($data['school_email'], FILTER_VALIDATE_EMAIL)) {
          $data['err_school_email'] = Localization::localize_message('error', 'err_email_invalid');
-        } elseif($this->school_model->find_school_email($data['school_email'])) {
+        } elseif($this->user_model->find_school_email($data['school_email'])) {
           $data['err_school_email'] = Localization::localize_message('error', 'err_email_taken');
       }
 
@@ -85,7 +85,7 @@ class Users extends Controller {
         $data['school_token'] = substr(str_shuffle($chars), 0, $length);
 
         // call model to register school
-        if($this->school_model->register($data)) {
+        if($this->user_model->register_school($data)) {
 
           // redirect to login with flash message
           Flash::set_flash_message('success', 'success_signup_school');
@@ -124,7 +124,7 @@ class Users extends Controller {
         $data['err_school_email'] = Localization::localize_message('error', 'err_email');
       }
       // check if login exists (call model method)
-      elseif (!$this->school_model->find_school_email($data['school_email'])) {
+      elseif (!$this->user_model->find_school_email($data['school_email'])) {
         $data['err_school_email'] = Localization::localize_message('error', 'err_email_not_registered');
       }
       
@@ -136,7 +136,7 @@ class Users extends Controller {
       // if no errors
       if (empty($data['err_school_email']) && empty($data['err_school_pwd'])) {
         // check for correct password and login (call model method)
-        $logged_in = $this->school_model->login($data['school_email'], $data['school_pwd']);
+        $logged_in = $this->user_model->login_school($data['school_email'], $data['school_pwd']);
 
         if($logged_in) {
           // create session 'logged in'
@@ -157,6 +157,18 @@ class Users extends Controller {
     }
   }
 
+
+  /* **************** CREATE LOGIN SESSION SCHOOL********************* */
+  
+  public function create_login_session_school($logged_in) {
+   
+    // create session variables for school data from $row
+    $_SESSION['user_id'] = $logged_in['user_id'];
+    $_SESSION['user_type'] = $logged_in['user_type'];
+    $_SESSION['school_name'] = $logged_in['school_name'];
+    redirect('directors');
+  }
+
   /* **************** SIGN UP TUTOR ********************* */
 
   // sign up tutor to database or reload view with errors
@@ -169,6 +181,7 @@ class Users extends Controller {
       $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
       
       // get user input data
+      $data['user_type'] = 'tutor';
       $data['tutor_first_name'] = trim($_POST['tutor_first_name']);
       $data['tutor_last_name'] = trim($_POST['tutor_last_name']);
       $data['tutor_email'] = trim($_POST['tutor_email']);
@@ -191,7 +204,7 @@ class Users extends Controller {
         $data['err_tutor_email'] = Localization::localize_message('error', 'err_email');
         } elseif (!filter_var($data['tutor_email'], FILTER_VALIDATE_EMAIL)) {
          $data['err_tutor_email'] = Localization::localize_message('error', 'err_email_invalid');
-        } elseif($this->tutor_model->find_tutor_email($data['tutor_email'])) {
+        } elseif($this->user_model->find_tutor_email($data['tutor_email'])) {
           $data['err_tutor_email'] = Localization::localize_message('error', 'err_email_taken');
       }
       
@@ -200,7 +213,7 @@ class Users extends Controller {
         $data['err_school_token'] = Localization::localize_message('error', 'err_school_token');
       }
         // validate school token 
-        elseif(!$this->school_model->validate_school_token($data['school_token'])) {
+        elseif(!$this->user_model->validate_school_token($data['school_token'])) {
           $data['err_school_token'] = Localization::localize_message('error', 'err_school_token_invalid');
       }
 
@@ -223,14 +236,14 @@ class Users extends Controller {
          && empty($data['err_tutor_email']) && empty($data['err_school_token'])
          && empty($data['err_tutor_pwd']) && empty($data['err_confirm_tutor_pwd'])) {
         
-        // get school id by token (associate tutor with school)
-        $data['school_id'] = $this->tutor_model->get_school_id_by_token($data['school_token']);
-        
         // hash password
         $data['tutor_pwd'] = password_hash($data['tutor_pwd'], PASSWORD_DEFAULT);
 
+        // get school name by token
+        $data['school_name'] = $this->user_model->get_school_name_by_token($data['school_token']);
+
         // call model method to register tutor
-        if($this->tutor_model->register($data)) {
+        if($this->user_model->register_tutor($data)) {
           
           // redirect to login#tutor with flash message
           Flash::set_flash_message('success', 'success_signup_tutor');
@@ -271,7 +284,7 @@ class Users extends Controller {
         $data['err_tutor_email'] = Localization::localize_message('error', 'err_email');
       }
       // check if login exists (call model method)
-      elseif (!$this->tutor_model->find_tutor_email($data['tutor_email'])) {
+      elseif (!$this->user_model->find_tutor_email($data['tutor_email'])) {
         $data['err_tutor_email'] = Localization::localize_message('error', 'err_email_not_registered');
       }
      
@@ -282,7 +295,7 @@ class Users extends Controller {
 
       // check for correct password
       if(empty($data['err_tutor_pwd'])) {
-        $logged_in = $this->tutor_model->login($data['tutor_email'], $data['tutor_pwd']);
+        $logged_in = $this->user_model->login_tutor($data['tutor_email'], $data['tutor_pwd']);
         if(!$logged_in) {
           $data['err_tutor_pwd'] = Localization::localize_message('error', 'err_pwd_incorrect');
         }
@@ -291,11 +304,8 @@ class Users extends Controller {
       // if no errors
       if(empty($data['err_tutor_email']) && empty($data['err_tutor_pwd'])) {
 
-        // get school data
-        $school_data = $this->tutor_model->get_school_data($data['tutor_email']);
-
         // create session 'logged in'
-        $this->create_login_session_tutor($logged_in, $school_data);
+        $this->create_login_session_tutor($logged_in);
       }
         
       // if errors
@@ -310,24 +320,15 @@ class Users extends Controller {
     } 
   }
 
-  /* **************** CREATE LOGIN SESSION SCHOOL********************* */
-  
-  public function create_login_session_school($logged_in) {
-   
-    // create session variables for school data from $row
-    $_SESSION['school_id'] = $logged_in['school_id'];
-    $_SESSION['school_name'] = $logged_in['school_name'];
-    redirect('directors');
-  }
 
   /* **************** CREATE LOGIN SESSION TUTOR ********************* */
  
-  public function create_login_session_tutor($logged_in, $school_data) {
+  public function create_login_session_tutor($logged_in) {
     
     // create session variables for tutor data from $row
-    $_SESSION['tutor_id'] = $logged_in['tutor_id'];
-    $_SESSION['school_id'] = $school_data['school_id'];
-    $_SESSION['school_name'] = $school_data['school_name'];
+    $_SESSION['user_id'] = $logged_in['user_id'];
+    $_SESSION['user_type'] = $logged_in['user_type'];
+    $_SESSION['school_name'] = $logged_in['school_name'];
     redirect('courses');
   }
 
@@ -372,7 +373,7 @@ class Users extends Controller {
         $data['school_pwd'] = password_hash($data['school_pwd'], PASSWORD_DEFAULT);
 
         // update password
-        if($this->school_model->changepass($data)) {
+        if($this->user_model->change_school_password($data)) {
 
           // redirect to directors index with session message
           Flash::set_flash_message('success', 'success_change_pwd');
@@ -438,7 +439,7 @@ class Users extends Controller {
         $data['tutor_pwd'] = password_hash($data['tutor_pwd'], PASSWORD_DEFAULT);
 
         // update password
-        if($this->tutor_model->changepass($data)) {
+        if($this->user_model->change_tutor_password($data)) {
 
           // redirect to courses index with session message
           Flash::set_flash_message('success', 'success_change_pwd');

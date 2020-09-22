@@ -8,7 +8,7 @@ class Course extends Model {
 
     $this->conn->query("SELECT course_id, course_name, course_day,
       DATE_FORMAT(starts_at, '%H:%i') AS starts_at, DATE_FORMAT(ends_at, '%H:%i') AS ends_at
-      FROM courses WHERE tutor_id = '$tutor_id'
+      FROM courses WHERE user_id = '$tutor_id'
       ORDER BY FIELD (course_day, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')");
     $this->conn->execute();
     $rows = $this->conn->fetch_all();
@@ -18,9 +18,9 @@ class Course extends Model {
   public function get_course_id($data){
 
     $this->conn->query('SELECT course_id FROM courses
-      WHERE school_id = :school_id && tutor_id = :tutor_id
+      WHERE school_token = :school_token && user_id = :tutor_id
       && course_day = :course_day && starts_at = :starts_at');
-    $this->conn->bind(':school_id', $data['school_id']);
+    $this->conn->bind(':school_token', $data['school_token']);
     $this->conn->bind(':tutor_id', $data['tutor_id']);
     $this->conn->bind(':course_day', $data['course_day']);
     $this->conn->bind(':starts_at', $data['starts_at']);
@@ -30,7 +30,7 @@ class Course extends Model {
 
   public function get_course_by_id($course_id) {
 
-    $this->conn->query("SELECT tutor_id, course_name, course_day, school_year,
+    $this->conn->query("SELECT user_id, course_name, course_day, school_year,
       DATE_FORMAT(starts_at, '%H:%i') AS starts_at, DATE_FORMAT(ends_at, '%H:%i') AS ends_at
       FROM courses WHERE course_id = '$course_id'");
     $this->conn->execute();
@@ -40,11 +40,11 @@ class Course extends Model {
 
   public function save_course($data){
 
-    $this->conn->query('INSERT INTO courses (school_id, tutor_id, course_name, course_day,
+    $this->conn->query('INSERT INTO courses (school_token, user_id, course_name, course_day,
       starts_at, ends_at, school_year) VALUES
-      (:school_id, :tutor_id, :course_name, :course_day, :starts_at, :ends_at, :school_year)');
+      (:school_token, :tutor_id, :course_name, :course_day, :starts_at, :ends_at, :school_year)');
 
-    $this->conn->bind(':school_id', $data['school_id']);
+    $this->conn->bind(':school_token', $data['school_token']);
     $this->conn->bind(':tutor_id', $data['tutor_id']);
     $this->conn->bind(':course_name', $data['course_name']);
     $this->conn->bind(':course_day', $data['course_day']);

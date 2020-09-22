@@ -8,7 +8,9 @@ class Courses extends Controller {
     if(!AccessControl::is_logged_in_tutor()) {
       redirect('users/login#login-tutor');
     } else {
+      $this->user_model = $this->model('User');
       $this->course_model = $this->model('Course');
+      $this->student_model = $this->model('Student');
     }
   }
 
@@ -16,7 +18,7 @@ class Courses extends Controller {
   public function index() {
 
     // get courses
-    $courses = $this->course_model->get_courses($_SESSION['tutor_id']);
+    $courses = $this->course_model->get_courses($_SESSION['user_id']);
 
     // if there are no courses yet, set message
     if(empty($courses)) {
@@ -87,8 +89,7 @@ class Courses extends Controller {
         'starts_at' => $_POST['starts_at'],
         'ends_at' => $_POST['ends_at'],
         'num_of_students' => $_POST['num_of_students'],
-        'school_id' => $_SESSION['school_id'],
-        'tutor_id' => $_SESSION['tutor_id'],
+        'tutor_id' => $_SESSION['user_id'],
         'err_course_name' => '',
         'err_course_day' => '',
         'err_starts_at' => '',
@@ -96,6 +97,9 @@ class Courses extends Controller {
         'err_num_of_students' => '',
         'err_student_names' => ''
       ];
+
+      // get school token
+      $data['school_token'] = $this->user_model->get_school_token_by_id($data['tutor_id']);
 
       // get user input: student names + errors  
       for($i=0;$i<$data['num_of_students'];$i++) {
@@ -142,10 +146,10 @@ class Courses extends Controller {
         $data['course_id'] = $this->course_model->get_course_id($data);
           
         // save to students table
-        $this->course_model->save_students($data);
+        $this->student_model->save_students($data);
 
         // get student ids
-        $data['student_ids'] = $this->course_model->get_student_ids($data);
+        $data['student_ids'] = $this->student_model->get_student_ids($data['course_id']);
 
         // redirect to courses index with session message
         Flash::set_flash_message('success', 'success_add_course');
@@ -178,7 +182,7 @@ class Courses extends Controller {
   public function options(){
 
     // get courses from database
-    $courses = $this->course_model->get_courses($_SESSION['tutor_id']);
+    $courses = $this->course_model->get_courses($_SESSION['user_id']);
 
     // if there are no courses yet, display message
     if(empty($courses)) {
@@ -211,7 +215,7 @@ class Courses extends Controller {
     $course = $this->course_model->get_course_by_id($course_id);
 
     // check for correct user   
-    if($course['tutor_id'] != $_SESSION['tutor_id']) {
+    if($course['user_id'] != $_SESSION['user_id']) {
       redirect('courses/options');
     }
 
