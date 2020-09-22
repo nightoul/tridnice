@@ -112,9 +112,11 @@ class Localization {
   private static $content_translations = [
     'en' => [
       'days_of_week' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      'grid_lessons' => ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
     ],
     'cz' => [
       'days_of_week' => ['Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek'],
+      'grid_lessons' => ['Lekce 1', 'Lekce 2', 'Lekce 3', 'Lekce 4', 'Lekce 5'],
     ]
   ];
 }

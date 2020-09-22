@@ -9,8 +9,14 @@
       <!-- FORM ONE -->
     
       <div style="position:absolute;top:0;right:0">
-        <a href="<?= URLROOT ?>/courses" class="btn-large waves-effect waves-light" >Back</a>
-        <button type="submit" class="btn-large waves-effect waves-light" name="submit" >Submit changes</button>
+
+        <?php if($data['user_type'] == 'school'): ?>
+          <a href="<?= URLROOT ?>/directors" class="btn-large waves-effect waves-light" >Back</a>
+        <?php elseif($data['user_type'] == 'tutor'): ?>
+          <a href="<?= URLROOT ?>/courses" class="btn-large waves-effect waves-light" >Back</a>
+          <button type="submit" class="btn-large waves-effect waves-light" name="submit" >Submit changes</button>
+        <?php endif; ?>
+
       </div>
       <div class="row">
         <div class="input-field col m8">
@@ -59,10 +65,17 @@
         <tbody>
         <?php
 
-        $weeks = ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'];
+        // if school is logged in, disable all checkboxes and tutor record inputs
+        if($data['user_type'] == 'school') {
+          $is_disabled = ' disabled ';
+        } elseif($data['user_type'] == 'tutor') {
+          $is_disabled = '';
+        }
 
+        // render checkboxes
+        $output = '';
         for($i=0;$i<count($student_names);$i++) {
-          echo "
+          $output .= "
           <tr>
             <td>
               <div class='input-field'>
@@ -71,20 +84,23 @@
               </div>
             </td>";
             for($a=0;$a<count($dates); $a++) {
-              echo "
+              $output .= "
               <td>
                 <p>
                   <label>
                     <input type='hidden' name='checklist[]' value='0'>
-                    <input type='checkbox' name='checklist[]' value='1' class='checkbox student".$i." week".$a."' />
-                    <span>".$weeks[$a]."</span>
+                    <input";
+              $output .= $is_disabled;            
+              $output .= "type='checkbox' name='checklist[]' value='1' class='checkbox student".$i." week".$a."' />
+                    <span>".$data['grid_lessons'][$a]."</span>
                   </label>
                 </p>
               </td>
               ";
             }
         }
-        ?>
+        echo $output; ?>
+
         </tbody>
       </table>
 
@@ -93,7 +109,7 @@
       <h5>Tutor record</h5>
       <?php  
 
-      $output="";
+      $output = '';
       if(isset($data['tutor_records'])) {
         $records = $data['tutor_records'];
       }
@@ -119,8 +135,7 @@
           </div>
         </div>";
       }
-      echo $output;
-      ?>
+      echo $output; ?>
     </form>
   </div>
 

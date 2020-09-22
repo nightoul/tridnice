@@ -97,14 +97,15 @@ class Records extends Controller {
     // get this course by id
     $course = $this->course_model->get_course_by_id($course_id);
     
-    // prepare data: basic course info
+    // prepare data
     $data = [
       'course_id' => $course_id,
       'course_name' => $course['course_name'],
       'course_day' => $course['course_day'],
       'starts_at' => $course['starts_at'],
       'ends_at' => $course['ends_at'],
-      'school_year' => $course['school_year']
+      'school_year' => $course['school_year'],
+      'grid_lessons' => Localization::localize_content('grid_lessons')
     ];
 
     // get school token

@@ -6,16 +6,18 @@
 - in model: rename register_school etc na signup_school
 
 courses/create: is it neccessary to have fn get student ids?
-
-- records/show pridat disabled inputs
-- prepsat JS echo access php attendance array
-
-LATER
 - poresit check for correct user
 - prepsat pwd na password?
 
 
+
+- records/show pridat disabled inputs
+- dodelat change passes
+
+
+SHOW RECORD JS
 - JS sendMonth - remapping month vals
+- prepsat JS echo access php attendance array
 
 DUPLICATE JS (nejde mi je nacist ze src)
 1. courses/index & directors/index
