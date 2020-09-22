@@ -1,6 +1,5 @@
 
 
-- poresit check for correct user
 - prepsat pwd na password?
 
 

@@ -30,7 +30,7 @@ class Course extends Model {
 
   public function get_course_by_id($course_id) {
 
-    $this->conn->query("SELECT user_id, course_name, course_day, school_year,
+    $this->conn->query("SELECT school_token, user_id, course_name, course_day, school_year,
       DATE_FORMAT(starts_at, '%H:%i') AS starts_at, DATE_FORMAT(ends_at, '%H:%i') AS ends_at
       FROM courses WHERE course_id = '$course_id'");
     $this->conn->execute();

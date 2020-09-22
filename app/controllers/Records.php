@@ -25,11 +25,12 @@ class Records extends Controller {
 
     // if school logged in
     if(AccessControl::is_logged_in_school()) {
-
+      
       // check for correct user   
-      // if($data['school_id'] != $_SESSION['user_id']) {
-      //   redirect('directors');
-      // }
+      $school_token = $this->user_model->get_school_token_by_id($_SESSION['user_id']);
+      if($data['school_token'] != $school_token) {
+        redirect('directors');
+      }
 
       // send user type
       $data['user_type'] = 'school';
@@ -41,55 +42,49 @@ class Records extends Controller {
     if(AccessControl::is_logged_in_tutor()) {
 
       // check for correct user   
-    // if($data['tutor_id'] != $_SESSION['tutor_id']) {
-    //   redirect('courses');
-    // }
-
-    // update record
-    if(isset($_POST['submit'])) {
-
-      // get attendance from form
-      $checklist = $_POST['checklist'];
-      
-      /* slice checklist into rows: each student has one row of data in the checkbox grid
-      which means either 4 or 5 columns according to number of weeks in a given month */
-      $data['checklist_rows'] = array_chunk($checklist, count($data['dates_Y-m-d']));
-      
-      // get tutor records from form
-      $data['tutor_records'] = $_POST['tutor_records'];
-
-    
-      /* ***************** INSERT/UPDATE *********************** */
-
-      // check for first entry
-      if(!$this->attendance_model->count_rows_attendance($data)) {
-        // if attendance for this month is empty, insert data for new month
-          $this->attendance_model->save_attendance($data);
-          $this->tutor_record_model->save_tutor_records($data);
-      } else {
-        // else update presence in existing month
-          $this->attendance_model->update_attendance($data);
-          $this->tutor_record_model->update_tutor_records($data);
+      if($data['user_id'] != $_SESSION['user_id']) {
+        redirect('courses');
       }
 
-      // redirect to courses index
-      redirect('courses');
-    } else {
+      // update record
+      if(isset($_POST['submit'])) {
 
-      // send user type
-      $data['user_type'] = 'tutor';
+        // get attendance from form
+        $checklist = $_POST['checklist'];
+        
+        /* slice checklist into rows: each student has one row of data in the checkbox grid
+        which means either 4 or 5 columns according to number of weeks in a given month */
+        $data['checklist_rows'] = array_chunk($checklist, count($data['dates_Y-m-d']));
+        
+        // get tutor records from form
+        $data['tutor_records'] = $_POST['tutor_records'];
 
-      // load view
-      $this->view('records/show', $data);
-    }  
+      
+        /* ***************** INSERT/UPDATE *********************** */
 
+        // check for first entry
+        if(!$this->attendance_model->count_rows_attendance($data)) {
+          // if attendance for this month is empty, insert data for new month
+            $this->attendance_model->save_attendance($data);
+            $this->tutor_record_model->save_tutor_records($data);
+        } else {
+          // else update presence in existing month
+            $this->attendance_model->update_attendance($data);
+            $this->tutor_record_model->update_tutor_records($data);
+        }
+
+        // redirect to courses index
+        redirect('courses');
+      } else {
+
+        // send user type
+        $data['user_type'] = 'tutor';
+
+        // load view
+        $this->view('records/show', $data);
+      }  
     }
-
-    
-
   }
-  
-  
 
 
   public function getrecord($course_id, $month){
@@ -100,6 +95,8 @@ class Records extends Controller {
     // prepare data
     $data = [
       'course_id' => $course_id,
+      'school_token' => $course['school_token'],
+      'user_id' => $course['user_id'],
       'course_name' => $course['course_name'],
       'course_day' => $course['course_day'],
       'starts_at' => $course['starts_at'],
@@ -107,9 +104,6 @@ class Records extends Controller {
       'school_year' => $course['school_year'],
       'grid_lessons' => Localization::localize_content('grid_lessons')
     ];
-
-    // get school token
-    $data['school_token'] = $this->user_model->get_school_token_by_id($_SESSION['user_id']);
 
     
     /* *******************  REMAP MONTH VALUES ************************* 
