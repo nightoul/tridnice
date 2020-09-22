@@ -1,10 +1,5 @@
 
 
-- prepsat pwd na password?
-
-
-
-
 
 SHOW RECORD JS
 - JS sendMonth - remapping month vals

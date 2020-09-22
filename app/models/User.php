@@ -13,7 +13,7 @@ public function register_school($data) {
     $this->conn->bind(':school_name', $data['school_name']);
     $this->conn->bind(':school_token', $data['school_token']);
     $this->conn->bind(':email', $data['school_email']);
-    $this->conn->bind(':password', $data['school_pwd']);
+    $this->conn->bind(':password', $data['school_password']);
     
     // execute
     if($this->conn->execute()) {
@@ -28,7 +28,7 @@ public function register_school($data) {
   public function login_school($data) {
 
     $email = $data['school_email'];
-    $password = $data['school_pwd'];
+    $password = $data['school_password'];
 
     // get password from database
     $this->conn->query('SELECT * FROM users WHERE email = :email && user_type = "school"');
@@ -85,7 +85,7 @@ public function register_school($data) {
     $this->conn->bind(':tutor_first_name', $data['tutor_first_name']);
     $this->conn->bind(':tutor_last_name', $data['tutor_last_name']);
     $this->conn->bind(':email', $data['tutor_email']);
-    $this->conn->bind(':password', $data['tutor_pwd']);
+    $this->conn->bind(':password', $data['tutor_password']);
 
     // execute
     if($this->conn->execute()) {
@@ -99,7 +99,7 @@ public function register_school($data) {
   public function login_tutor ($data) {
 
     $email = $data['tutor_email'];
-    $password = $data['tutor_pwd'];
+    $password = $data['tutor_password'];
 
      // get password from database
      $this->conn->query('SELECT * FROM users WHERE email = :email && user_type = "tutor"');

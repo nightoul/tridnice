@@ -40,8 +40,8 @@ class Users extends Controller {
         'user_type' => 'school',
         'school_name' => trim($_POST['school_name']),
         'school_email' => trim($_POST['school_email']),
-        'school_pwd' => trim($_POST['school_pwd']),
-        'confirm_school_pwd' => trim($_POST['confirm_school_pwd']),
+        'school_password' => trim($_POST['school_password']),
+        'confirm_school_password' => trim($_POST['confirm_school_password']),
       ];
 
       // validate school name
@@ -59,25 +59,25 @@ class Users extends Controller {
       }
 
       // validate password
-      if(empty($data['school_pwd'])) {
-        $data['err_school_pwd'] = Localization::localize_message('error', 'err_pwd');
-      } elseif(strlen($data['school_pwd']) < 6) {
-        $data['err_school_pwd'] = Localization::localize_message('error', 'err_pwd_invalid');
+      if(empty($data['school_password'])) {
+        $data['err_school_password'] = Localization::localize_message('error', 'err_password');
+      } elseif(strlen($data['school_password']) < 6) {
+        $data['err_school_password'] = Localization::localize_message('error', 'err_password_invalid');
       }
 
       // validate confirm password
-      if(empty($data['confirm_school_pwd'])) {
-        $data['err_confirm_school_pwd'] = Localization::localize_message('error', 'err_confirm_pwd');
-      } elseif ($data['school_pwd'] != $data['confirm_school_pwd']) {
-        $data['err_confirm_school_pwd'] = Localization::localize_message('error', 'err_pwd_match');
+      if(empty($data['confirm_school_password'])) {
+        $data['err_confirm_school_password'] = Localization::localize_message('error', 'err_confirm_password');
+      } elseif ($data['school_password'] != $data['confirm_school_password']) {
+        $data['err_confirm_school_password'] = Localization::localize_message('error', 'err_password_match');
       }
 
       // if no errors
       if (empty($data['err_school_name']) && empty($data['err_school_email'])
-        && empty($data['err_school_pwd']) && empty($data['err_confirm_school_pwd'])) {
+        && empty($data['err_school_password']) && empty($data['err_confirm_school_password'])) {
         
         // hash password
-        $data['school_pwd'] = password_hash($data['school_pwd'], PASSWORD_DEFAULT);
+        $data['school_password'] = password_hash($data['school_password'], PASSWORD_DEFAULT);
 
         // generate unique school token
         $length = 8;
@@ -116,7 +116,7 @@ class Users extends Controller {
       // get user input data and prepare errors
       $data = [
       'school_email' => trim($_POST['school_email']),
-      'school_pwd' => trim($_POST['school_pwd']),
+      'school_password' => trim($_POST['school_password']),
       ];
 
       // if empty login
@@ -129,12 +129,12 @@ class Users extends Controller {
       }
       
       // if empty password
-      if(empty($data['school_pwd'])) {
-        $data['err_school_pwd'] = Localization::localize_message('error', 'err_pwd');
+      if(empty($data['school_password'])) {
+        $data['err_school_password'] = Localization::localize_message('error', 'err_password');
       }
 
       // if no errors
-      if (empty($data['err_school_email']) && empty($data['err_school_pwd'])) {
+      if (empty($data['err_school_email']) && empty($data['err_school_password'])) {
         // check for correct password and login (call model method)
         $logged_in = $this->user_model->login_school($data);
 
@@ -144,7 +144,7 @@ class Users extends Controller {
 
         } else {
           // incorrect password, load view with error
-          $data['err_school_pwd'] = Localization::localize_message('error', 'err_pwd_incorrect');
+          $data['err_school_password'] = Localization::localize_message('error', 'err_password_incorrect');
           $this->view('users/login', $data);
         }
 
@@ -186,8 +186,8 @@ class Users extends Controller {
       $data['tutor_last_name'] = trim($_POST['tutor_last_name']);
       $data['tutor_email'] = trim($_POST['tutor_email']);
       $data['school_token'] = trim($_POST['school_token']);
-      $data['tutor_pwd'] = trim($_POST['tutor_pwd']);
-      $data['confirm_tutor_pwd'] = trim($_POST['confirm_tutor_pwd']);
+      $data['tutor_password'] = trim($_POST['tutor_password']);
+      $data['confirm_tutor_password'] = trim($_POST['confirm_tutor_password']);
 
       // if empty first name
       if(empty($data['tutor_first_name'])) {
@@ -218,26 +218,26 @@ class Users extends Controller {
       }
 
       // validate password
-      if(empty($data['tutor_pwd'])) {
-        $data['err_tutor_pwd'] = Localization::localize_message('error', 'err_pwd');
-      } elseif(strlen($data['tutor_pwd']) < 6) {
-        $data['err_tutor_pwd'] = Localization::localize_message('error', 'err_pwd_invalid');
+      if(empty($data['tutor_password'])) {
+        $data['err_tutor_password'] = Localization::localize_message('error', 'err_password');
+      } elseif(strlen($data['tutor_password']) < 6) {
+        $data['err_tutor_password'] = Localization::localize_message('error', 'err_password_invalid');
       }
 
       // validate confirm password
-      if(empty($data['confirm_tutor_pwd'])) {
-        $data['err_confirm_tutor_pwd'] = Localization::localize_message('error', 'err_confirm_pwd');
-      } elseif ($data['tutor_pwd'] != $data['confirm_tutor_pwd']) {
-        $data['err_confirm_tutor_pwd'] = Localization::localize_message('error', 'err_pwd_match');
+      if(empty($data['confirm_tutor_password'])) {
+        $data['err_confirm_tutor_password'] = Localization::localize_message('error', 'err_confirm_password');
+      } elseif ($data['tutor_password'] != $data['confirm_tutor_password']) {
+        $data['err_confirm_tutor_password'] = Localization::localize_message('error', 'err_password_match');
       }
 
       // if no errors
       if (empty($data['err_tutor_first_name']) && empty($data['err_tutor_last_name'])
          && empty($data['err_tutor_email']) && empty($data['err_school_token'])
-         && empty($data['err_tutor_pwd']) && empty($data['err_confirm_tutor_pwd'])) {
+         && empty($data['err_tutor_password']) && empty($data['err_confirm_tutor_password'])) {
         
         // hash password
-        $data['tutor_pwd'] = password_hash($data['tutor_pwd'], PASSWORD_DEFAULT);
+        $data['tutor_password'] = password_hash($data['tutor_password'], PASSWORD_DEFAULT);
 
         // get school name by token
         $data['school_name'] = $this->user_model->get_school_name_by_token($data['school_token']);
@@ -276,7 +276,7 @@ class Users extends Controller {
       // get user input data and prepare errors
       $data = [
       'tutor_email' => trim($_POST['tutor_email']),
-      'tutor_pwd' => trim($_POST['tutor_pwd']),
+      'tutor_password' => trim($_POST['tutor_password']),
       ];
 
       // check for empty login
@@ -289,20 +289,20 @@ class Users extends Controller {
       }
      
       // check for empty password
-      if(empty($data['tutor_pwd'])) {
-        $data['err_tutor_pwd'] = Localization::localize_message('error', 'err_pwd');
+      if(empty($data['tutor_password'])) {
+        $data['err_tutor_password'] = Localization::localize_message('error', 'err_password');
       }
 
       // check for correct password
-      if(empty($data['err_tutor_pwd'])) {
+      if(empty($data['err_tutor_password'])) {
         $logged_in = $this->user_model->login_tutor($data);
         if(!$logged_in) {
-          $data['err_tutor_pwd'] = Localization::localize_message('error', 'err_pwd_incorrect');
+          $data['err_tutor_password'] = Localization::localize_message('error', 'err_password_incorrect');
         }
       }
       
       // if no errors
-      if(empty($data['err_tutor_email']) && empty($data['err_tutor_pwd'])) {
+      if(empty($data['err_tutor_email']) && empty($data['err_tutor_password'])) {
 
         // create session 'logged in'
         $this->create_login_session_tutor($logged_in);
@@ -350,16 +350,16 @@ class Users extends Controller {
 
       // validate password
       if(empty($data['password'])) {
-        $data['err_password'] = Localization::localize_message('error', 'err_pwd');
+        $data['err_password'] = Localization::localize_message('error', 'err_password');
       } elseif(strlen($data['password']) < 6) {
-        $data['err_password'] = Localization::localize_message('error', 'err_pwd_invalid');
+        $data['err_password'] = Localization::localize_message('error', 'err_password_invalid');
       }
 
       // validate confirm password
       if(empty($data['confirm_password'])) {
-        $data['err_confirm_password'] = Localization::localize_message('error', 'err_confirm_pwd');
+        $data['err_confirm_password'] = Localization::localize_message('error', 'err_confirm_password');
       } elseif ($data['password'] != $data['confirm_password']) {
-        $data['err_confirm_password'] = Localization::localize_message('error', 'err_pwd_match');
+        $data['err_confirm_password'] = Localization::localize_message('error', 'err_password_match');
       }
       
       // if no errors
@@ -375,7 +375,7 @@ class Users extends Controller {
         if($this->user_model->change_password($data)) {
 
           // redirect to index with session message
-          Flash::set_flash_message('success', 'success_change_pwd');
+          Flash::set_flash_message('success', 'success_change_password');
 
           if($_SESSION['user_type'] == 'school') {
             redirect('directors');

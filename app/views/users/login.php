@@ -26,9 +26,9 @@
             <div class="red-text"><?= $data['err_school_email'] ?? ''; ?></div>
           </div>
           <div class="input-field col m12">
-            <input type="password" name="school_pwd" id="school-pwd">
-            <label for="school-pwd">Password</label>
-            <div class="red-text"><?= $data['err_school_pwd'] ?? ''; ?></div>
+            <input type="password" name="school_password" id="school-password">
+            <label for="school-password">Password</label>
+            <div class="red-text"><?= $data['err_school_password'] ?? ''; ?></div>
           </div>
           <button name="submit" class="btn btn-large right">Login</button>
         </div>
@@ -47,9 +47,9 @@
             <div class="red-text"><?= $data['err_tutor_email'] ?? ''; ?></div>
           </div>
           <div class="input-field col m12">
-            <input type="password" name="tutor_pwd" id="tutor-pwd">
-            <label for="tutor-pwd">Password</label>
-            <div class="red-text"><?= $data['err_tutor_pwd'] ?? ''; ?></div>
+            <input type="password" name="tutor_password" id="tutor-password">
+            <label for="tutor-password">Password</label>
+            <div class="red-text"><?= $data['err_tutor_password'] ?? ''; ?></div>
           </div>
           <button name="submit" class="btn btn-large right">Login</button>
         </div>

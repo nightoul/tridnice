@@ -31,14 +31,14 @@
             <div class="red-text"><?= $data['err_school_email'] ?? ''; ?></div>
           </div>
           <div class="input-field col m6">
-            <label for="school-pwd">Password</label>
-            <input type="password" id="school-pwd" name="school_pwd" >
-            <div class="red-text"><?= $data['err_school_pwd'] ?? ''; ?></div>
+            <label for="school-password">Password</label>
+            <input type="password" id="school-password" name="school_password" >
+            <div class="red-text"><?= $data['err_school_password'] ?? ''; ?></div>
           </div>
           <div class="input-field col m6">
-            <label for="confirm-school-pwd">Confirm password</label>
-            <input type="password" id="confirm-school-pwd" name="confirm_school_pwd" >
-            <div class="red-text"><?= $data['err_confirm_school_pwd'] ?? ''; ?></div>
+            <label for="confirm-school-password">Confirm password</label>
+            <input type="password" id="confirm-school-password" name="confirm_school_password" >
+            <div class="red-text"><?= $data['err_confirm_school_password'] ?? ''; ?></div>
           </div>
           <button name="submit" class="btn btn-large right">Sign up</button>
         </div>
@@ -72,14 +72,14 @@
             <div class="red-text"><?= $data['err_school_token'] ?? ''; ?></div>
           </div>
           <div class="input-field col m6">
-            <label for="tutor-pwd">Password</label>
-            <input type="password" id="tutor-pwd" name="tutor_pwd" >
-            <div class="red-text"><?= $data['err_tutor_pwd'] ?? ''; ?></div>
+            <label for="tutor-password">Password</label>
+            <input type="password" id="tutor-password" name="tutor_password" >
+            <div class="red-text"><?= $data['err_tutor_password'] ?? ''; ?></div>
           </div>
           <div class="input-field col m6">
-            <label for="confirm-tutor-pwd">Confirm password</label>
-            <input type="password" id="confirm-tutor-pwd" name="confirm_tutor_pwd" >
-            <div class="red-text"><?= $data['err_confirm_tutor_pwd'] ?? ''; ?></div>
+            <label for="confirm-tutor-password">Confirm password</label>
+            <input type="password" id="confirm-tutor-password" name="confirm_tutor_password" >
+            <div class="red-text"><?= $data['err_confirm_tutor_password'] ?? ''; ?></div>
           </div>
           <button name="submit" class="btn btn-large right">Sign up</button>
         </div>
