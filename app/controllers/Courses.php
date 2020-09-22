@@ -148,9 +148,6 @@ class Courses extends Controller {
         // save to students table
         $this->student_model->save_students($data);
 
-        // get student ids
-        $data['student_ids'] = $this->student_model->get_student_ids($data['course_id']);
-
         // redirect to courses index with session message
         Flash::set_flash_message('success', 'success_add_course');
         redirect('courses');

@@ -25,11 +25,14 @@ public function register_school($data) {
   
   /* **************** LOGIN SCHOOL ********************* */
   
-  public function login_school($login, $password) {
+  public function login_school($data) {
+
+    $email = $data['school_email'];
+    $password = $data['school_pwd'];
 
     // get password from database
     $this->conn->query('SELECT * FROM users WHERE email = :email && user_type = "school"');
-    $this->conn->bind(':email', $login);
+    $this->conn->bind(':email', $email);
     $row = $this->conn->fetch_one();
 
     // compare passwords
@@ -70,25 +73,6 @@ public function register_school($data) {
     }
   }
   
-  /* **************** CHANGE SCHOOL PASSWORD ********************* */
-
-  public function change_school_password($data){
-
-    $new_password = $data['school_pwd'];
-    $school_id = $data['school_id'];
-
-    $this->conn->query('UPDATE schools SET school_password = :new_password WHERE school_id = :school_id');
-    $this->conn->bind(':new_password', $new_password);
-    $this->conn->bind(':school_id', $school_id);
-
-    if($this->conn->execute()) {
-      return true;
-    }else {
-      return false;
-    }
-  }
-
-
   public function register_tutor ($data) {
 
     $this->conn->query('INSERT INTO users (user_type, school_token, school_name,
@@ -112,7 +96,10 @@ public function register_school($data) {
 
   }
 
-  public function login_tutor ($email, $password) {
+  public function login_tutor ($data) {
+
+    $email = $data['tutor_email'];
+    $password = $data['tutor_pwd'];
 
      // get password from database
      $this->conn->query('SELECT * FROM users WHERE email = :email && user_type = "tutor"');
@@ -162,14 +149,16 @@ public function register_school($data) {
     return $row['school_name'];
   }
 
-  public function change_tutor_password($data){
+  /* **************** CHANGE PASSWORD ********************* */
 
-    $new_password = $data['tutor_pwd'];
-    $tutor_id = $data['tutor_id'];
+  public function change_password($data){
 
-    $this->conn->query('UPDATE tutors SET tutor_password = :new_password WHERE tutor_id = :tutor_id');
+    $new_password = $data['password'];
+    $user_id = $data['user_id'];
+
+    $this->conn->query('UPDATE users SET password = :new_password WHERE user_id = :user_id');
     $this->conn->bind(':new_password', $new_password);
-    $this->conn->bind(':tutor_id', $tutor_id);
+    $this->conn->bind(':user_id', $user_id);
 
     if($this->conn->execute()) {
       return true;

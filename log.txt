@@ -1,12 +1,5 @@
 
 
-- dodelat change passes
-
-- prepsat session school id tutor id atd na user id a pridat user type do seesions
-- sjednotit register school register tutor na signup, mozna totez u loginu
-- in model: rename register_school etc na signup_school
-
-courses/create: is it neccessary to have fn get student ids?
 - poresit check for correct user
 - prepsat pwd na password?
 

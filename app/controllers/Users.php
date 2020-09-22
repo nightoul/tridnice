@@ -136,7 +136,7 @@ class Users extends Controller {
       // if no errors
       if (empty($data['err_school_email']) && empty($data['err_school_pwd'])) {
         // check for correct password and login (call model method)
-        $logged_in = $this->user_model->login_school($data['school_email'], $data['school_pwd']);
+        $logged_in = $this->user_model->login_school($data);
 
         if($logged_in) {
           // create session 'logged in'
@@ -295,7 +295,7 @@ class Users extends Controller {
 
       // check for correct password
       if(empty($data['err_tutor_pwd'])) {
-        $logged_in = $this->user_model->login_tutor($data['tutor_email'], $data['tutor_pwd']);
+        $logged_in = $this->user_model->login_tutor($data);
         if(!$logged_in) {
           $data['err_tutor_pwd'] = Localization::localize_message('error', 'err_pwd_incorrect');
         }
@@ -320,7 +320,6 @@ class Users extends Controller {
     } 
   }
 
-
   /* **************** CREATE LOGIN SESSION TUTOR ********************* */
  
   public function create_login_session_tutor($logged_in) {
@@ -332,8 +331,8 @@ class Users extends Controller {
     redirect('courses');
   }
 
-  /* **************** CHANGE SCHOOL PASSWORD ********************* */
-  public function changeschoolpass(){
+  /* **************** CHANGE PASSWORD ********************* */
+  public function changepassword(){
 
     // check for $_POST
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -343,123 +342,62 @@ class Users extends Controller {
 
       // get user input data and prepare errors
       $data = [
-      'school_pwd' => trim($_POST['school_pwd']),
-      'confirm_school_pwd' => trim($_POST['confirm_school_pwd']),
-      'err_school_pwd' => '',
-      'err_confirm_school_pwd' => ''
+      'password' => trim($_POST['password']),
+      'confirm_password' => trim($_POST['confirm_password']),
+      'err_password' => '',
+      'err_confirm_password' => ''
       ];
 
       // validate password
-      if(empty($data['school_pwd'])) {
-        $data['err_school_pwd'] = Localization::localize_message('error', 'err_pwd');
-      } elseif(strlen($data['school_pwd']) < 6) {
-        $data['err_school_pwd'] = Localization::localize_message('error', 'err_pwd_invalid');
+      if(empty($data['password'])) {
+        $data['err_password'] = Localization::localize_message('error', 'err_pwd');
+      } elseif(strlen($data['password']) < 6) {
+        $data['err_password'] = Localization::localize_message('error', 'err_pwd_invalid');
       }
 
       // validate confirm password
-      if(empty($data['confirm_school_pwd'])) {
-        $data['err_confirm_school_pwd'] = Localization::localize_message('error', 'err_confirm_pwd');
-      } elseif ($data['school_pwd'] != $data['confirm_school_pwd']) {
-        $data['err_confirm_school_pwd'] = Localization::localize_message('error', 'err_pwd_match');
+      if(empty($data['confirm_password'])) {
+        $data['err_confirm_password'] = Localization::localize_message('error', 'err_confirm_pwd');
+      } elseif ($data['password'] != $data['confirm_password']) {
+        $data['err_confirm_password'] = Localization::localize_message('error', 'err_pwd_match');
       }
       
       // if no errors
-      if (empty($data['err_school_pwd']) && empty($data['err_confirm_school_pwd'])) {
+      if (empty($data['err_password']) && empty($data['err_confirm_password'])) {
 
-        // get school id
-        $data['school_id'] = $_SESSION['school_id'];
+        // get user id
+        $data['user_id'] = $_SESSION['user_id'];
         
         // hash password
-        $data['school_pwd'] = password_hash($data['school_pwd'], PASSWORD_DEFAULT);
+        $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
         // update password
-        if($this->user_model->change_school_password($data)) {
+        if($this->user_model->change_password($data)) {
 
-          // redirect to directors index with session message
+          // redirect to index with session message
           Flash::set_flash_message('success', 'success_change_pwd');
-          redirect('directors');
+
+          if($_SESSION['user_type'] == 'school') {
+            redirect('directors');
+          } elseif($_SESSION['user_type'] == 'tutor') {
+            redirect('courses');
+          }
         }
 
       } else {
         // wrong input data, reload view with errors
-        $this->view('users/changeschoolpass', $data);
+        $this->view('users/changepassword', $data);
       }
 
     } else {
 
       // if submit is not set
       $data = [
-        'err_school_pwd' => '',
-        'err_confirm_school_pwd' => ''
+        'err_password' => '',
+        'err_confirm_password' => ''
       ];
       // load view
-      $this->view('users/changeschoolpass', $data);
-    }
-  }
-
-
-  /* **************** CHANGE TUTOR PASSWORD ********************* */
-  public function changetutorpass(){
-
-    // check for $_POST
-    if($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-      // sanitize $_POST input data
-      $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-
-      // get user input data and prepare errors
-      $data = [
-      'tutor_pwd' => trim($_POST['tutor_pwd']),
-      'confirm_tutor_pwd' => trim($_POST['confirm_tutor_pwd']),
-      'err_tutor_pwd' => '',
-      'err_confirm_tutor_pwd' => ''
-      ];
-
-      // validate password
-      if(empty($data['tutor_pwd'])) {
-        $data['err_tutor_pwd'] = Localization::localize_message('error', 'err_pwd');
-      } elseif(strlen($data['tutor_pwd']) < 6) {
-        $data['err_tutor_pwd'] = Localization::localize_message('error', 'err_pwd_invalid');
-      }
-
-      // validate confirm password
-      if(empty($data['confirm_tutor_pwd'])) {
-        $data['err_confirm_tutor_pwd'] = Localization::localize_message('error', 'err_confirm_pwd');
-      } elseif ($data['tutor_pwd'] != $data['confirm_tutor_pwd']) {
-        $data['err_confirm_tutor_pwd'] = Localization::localize_message('error', 'err_pwd_match');
-      }
-      
-      // if no errors
-      if (empty($data['err_tutor_pwd']) && empty($data['err_confirm_tutor_pwd'])) {
-
-        // get tutor id
-        $data['tutor_id'] = $_SESSION['tutor_id'];
-        
-        // hash password
-        $data['tutor_pwd'] = password_hash($data['tutor_pwd'], PASSWORD_DEFAULT);
-
-        // update password
-        if($this->user_model->change_tutor_password($data)) {
-
-          // redirect to courses index with session message
-          Flash::set_flash_message('success', 'success_change_pwd');
-          redirect('courses');
-        }
-
-      } else {
-        // wrong input data, reload view with errors
-        $this->view('users/changetutorpass', $data);
-      }
-
-    } else {
-
-      // if submit is not set
-      $data = [
-        'err_tutor_pwd' => '',
-        'err_confirm_tutor_pwd' => ''
-      ];
-      // load view
-      $this->view('users/changetutorpass', $data);
+      $this->view('users/changepassword', $data);
     }
   }
 
@@ -467,10 +405,9 @@ class Users extends Controller {
   
   public function logout () {
     
-    unset($_SESSION['school_id']);
+    unset($_SESSION['user_id']);
+    unset($_SESSION['user_type']);
     unset($_SESSION['school_name']);
-    unset($_SESSION['school_email']);
-    unset($_SESSION['tutor_id']);
     session_destroy();
     redirect('home');
   }

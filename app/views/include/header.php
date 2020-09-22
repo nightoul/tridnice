@@ -19,17 +19,10 @@
     <ul id="nav-mobile" class="right hide-on-med-and-down">
 
     <?php if(isset($_SESSION['user_id'])) : ?>
-    <?php if($_SESSION['user_type'] == 'tutor') : ?>
 
-      <li><a href="<?= URLROOT;?>/users/changetutorpass">Change password</a></li>
+      <li><a href="<?= URLROOT;?>/users/changepassword">Change password</a></li>
       <li><a href="<?= URLROOT;?>/users/logout">Logout</a></li>
     
-    <?php elseif ($_SESSION['user_type'] == 'school') : ?>
-
-      <li><a href="<?= URLROOT;?>/users/changeschoolpass">Change Password</a></li>
-      <li><a href="<?= URLROOT;?>/users/logout">Logout</a></li>
-
-    <?php endif; ?>
     <?php else : ?>
     
       <li><a href="<?= URLROOT;?>/users/login">Login</a></li>
