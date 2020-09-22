@@ -7,23 +7,19 @@
 
 courses/create: is it neccessary to have fn get student ids?
 
-- two views updaterecord and showrecord? 
+- records/show pridat disabled inputs
 - prepsat JS echo access php attendance array
+
+LATER
+- poresit check for correct user
 - prepsat pwd na password?
 
-LATER - RECORDS
-rename record to index and (to eliminate one level in links)
-poresit check for correct user
 
+- JS sendMonth - remapping month vals
 
-3. JS 
-- prepsat JS echo access php attendance array
-- JS sendMonth - remapping month vals. also JS scripts jsou duplicated nejde mi je nacist ze src
-
-4. DUPLICATE JS
+DUPLICATE JS (nejde mi je nacist ze src)
 1. courses/index & directors/index
-2. records/updaterecord & records/showrecord
-3. preselect tabs in users/signup & users/login
+2. preselect tabs in users/signup & users/login
 
 
 

@@ -11,9 +11,8 @@ class Records extends Controller {
     $this->tutor_record_model = $this->model('TutorRecord');
   }
 
-  /* ************** DIRECTORS: SHOW RECORD **************************** */
 
-  public function record($course_id, $month) {
+  public function show($course_id, $month) {
 
     // check if neither school nor tutor are logged in
     if(!AccessControl::is_logged_in_school() && !AccessControl::is_logged_in_tutor()) {
@@ -36,7 +35,7 @@ class Records extends Controller {
       $data['user_type'] = 'school';
     
       // load view with data
-      $this->view('records/record', $data);
+      $this->view('records/show', $data);
     }
 
     if(AccessControl::is_logged_in_tutor()) {
@@ -81,7 +80,7 @@ class Records extends Controller {
       $data['user_type'] = 'tutor';
 
       // load view
-      $this->view('records/record', $data);
+      $this->view('records/show', $data);
     }  
 
     }
