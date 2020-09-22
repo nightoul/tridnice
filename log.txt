@@ -1,5 +1,6 @@
 
 
+- dodelat change passes
 
 - prepsat session school id tutor id atd na user id a pridat user type do seesions
 - sjednotit register school register tutor na signup, mozna totez u loginu
@@ -11,8 +12,6 @@ courses/create: is it neccessary to have fn get student ids?
 
 
 
-- records/show pridat disabled inputs
-- dodelat change passes
 
 
 SHOW RECORD JS

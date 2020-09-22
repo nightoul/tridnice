@@ -67,7 +67,7 @@
 
         // if school is logged in, disable all checkboxes and tutor record inputs
         if($data['user_type'] == 'school') {
-          $is_disabled = ' disabled ';
+          $is_disabled = 'disabled';
         } elseif($data['user_type'] == 'tutor') {
           $is_disabled = '';
         }
@@ -89,9 +89,7 @@
                 <p>
                   <label>
                     <input type='hidden' name='checklist[]' value='0'>
-                    <input";
-              $output .= $is_disabled;            
-              $output .= "type='checkbox' name='checklist[]' value='1' class='checkbox student".$i." week".$a."' />
+                    <input $is_disabled type='checkbox' name='checklist[]' value='1' class='checkbox student".$i." week".$a."' />
                     <span>".$data['grid_lessons'][$a]."</span>
                   </label>
                 </p>
@@ -125,7 +123,7 @@
           <label>Date</label>
         </div>
           <div class='input-field col s9'>
-            <input id='topic-week".$i."' type='text' name='tutor_records[]'
+            <input $is_disabled type='text' id='topic-week".$i."' name='tutor_records[]'
               value='";
         if(isset($records[$i])) {
           $output .= $records[$i];
