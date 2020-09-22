@@ -51,7 +51,7 @@
       foreach($rows as $row): ?>
         <tr>
           <td><?= $row['tutor_name']?></td>
-          <td><a href="<?= URLROOT . '/records/showrecord/'.$row['course_id'] ?>" class="course"><?= $row['course_name']?></a></td>
+          <td><a href="<?= URLROOT . '/records/record/'.$row['course_id'] ?>" class="course"><?= $row['course_name']?></a></td>
           <td><?= $row['course_day']?></td>
           <td><?= $row['starts_at']?></td>
           <td><?= $row['ends_at']?></td>  

@@ -4,7 +4,7 @@
 
   <div style="position:relative" class="container">
     <h2><?= $_SESSION['school_name'] ?></h2>
-    <form action="<?= URLROOT; ?>/records/updaterecord/<?= $data['course_id']?>" method="POST">
+    <form action="<?= URLROOT; ?>/records/record/<?= $data['course_id']?>" method="POST">
 
       <!-- FORM ONE -->
     

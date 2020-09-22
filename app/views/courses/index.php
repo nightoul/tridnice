@@ -57,7 +57,7 @@
         for($a=0;$a<count($timetable[$i]);$a++){
           $id = $timetable[$i][$a]['course_id'];
           $course_name = $timetable[$i][$a]['course_name'];
-          $day .= "<td><a href='".URLROOT."/records/updaterecord/".$id."' class='course'>".$course_name."</a></td>";
+          $day .= "<td><a href='".URLROOT."/records/record/".$id."' class='course'>".$course_name."</a></td>";
         }
         $day .= "</tr>";
         $school_week .= $day;

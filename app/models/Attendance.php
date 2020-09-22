@@ -20,7 +20,7 @@ class Attendance extends Model {
     
       public function save_attendance($data){
     
-        $school_id = $data['school_id'];
+        $school_token = $data['school_token'];
         $course_id = $data['course_id'];
         $student_ids = $data['student_ids'];
         $dates = $data['dates_Y-m-d'];
@@ -32,8 +32,8 @@ class Attendance extends Model {
             $presence = $checklist_rows[$i][$a];
             $student_id = $student_ids[$i];
             $date = $dates[$a];
-            $this->conn->query("INSERT INTO attendance (school_id, course_id, student_id,
-              date, presence, school_year) VALUES ('$school_id', '$course_id', '$student_id',
+            $this->conn->query("INSERT INTO attendance (school_token, course_id, student_id,
+              date, presence, school_year) VALUES ('$school_token', '$course_id', '$student_id',
               '$date', '$presence', '$school_year')");
             $this->conn->execute();
           }
@@ -42,13 +42,13 @@ class Attendance extends Model {
     
       public function count_rows_attendance($data) {
     
-        $school_id = $data['school_id'];
+        $school_token = $data['school_token'];
         $course_id = $data['course_id'];
         $month = $data['month'];
         $school_year = $data['school_year'];
     
         $this->conn->query("SELECT attendance_id FROM attendance
-          WHERE school_id = '$school_id' && course_id = '$course_id'
+          WHERE school_token = '$school_token' && course_id = '$course_id'
           && monthname(date) = '$month' && school_year = '$school_year'");
         $this->conn->execute();
         
@@ -62,7 +62,7 @@ class Attendance extends Model {
     
       public function update_attendance($data){
     
-        $school_id = $data['school_id'];
+        $school_token = $data['school_token'];
         $course_id = $data['course_id'];
         $student_ids = $data['student_ids'];
         $dates = $data['dates_Y-m-d'];
@@ -75,7 +75,7 @@ class Attendance extends Model {
             $student_id = $student_ids[$i];
             $date = $dates[$a];       
             $this->conn->query("UPDATE attendance SET presence='$presence' 
-              WHERE school_id = '$school_id' && course_id = '$course_id' && student_id = '$student_id'
+              WHERE school_token = '$school_token' && course_id = '$course_id' && student_id = '$student_id'
               && date='$date' && school_year = '$school_year'");
             $this->conn->execute();
           }

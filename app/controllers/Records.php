@@ -4,50 +4,47 @@ class Records extends Controller {
 
   public function __construct (){
 
-      $this->course_model = $this->model('Course');
-      $this->student_model = $this->model('Student');
-      $this->attendance_model = $this->model('Attendance');
-      $this->tutor_record_model = $this->model('TutorRecord');
+    $this->user_model = $this->model('User');
+    $this->course_model = $this->model('Course');
+    $this->student_model = $this->model('Student');
+    $this->attendance_model = $this->model('Attendance');
+    $this->tutor_record_model = $this->model('TutorRecord');
   }
 
   /* ************** DIRECTORS: SHOW RECORD **************************** */
-  
-  public function showrecord($course_id, $month){
 
-    // check if school logged in
-    if(!AccessControl::is_logged_in_school()) {
-      redirect('schools/login');
-    } 
+  public function record($course_id, $month) {
+
+    // check if neither school nor tutor are logged in
+    if(!AccessControl::is_logged_in_school() && !AccessControl::is_logged_in_tutor()) {
+      redirect('users/login');
+      exit();
+    }
    
     // call getter
     $data = $this->getrecord($course_id, $month);
 
-    // check for correct user   
-    if($data['school_id'] != $_SESSION['school_id']) {
-      redirect('directors');
-    }
+    // if school logged in
+    if(AccessControl::is_logged_in_school()) {
+
+      // check for correct user   
+      // if($data['school_id'] != $_SESSION['user_id']) {
+      //   redirect('directors');
+      // }
+
+      // send user type
+      $data['user_type'] = 'school';
     
-    // load view with data
-    $this->view('records/showrecord', $data);
-  }
-
-  
-  /* ************** TUTORS: UPDATE RECORD **************************** */
-
-  public function updaterecord($course_id, $month){
-
-    // check if tutor logged in
-    if(!AccessControl::is_logged_in_tutor()) {
-      redirect('tutors/login');
-    } 
-   
-    // call getter
-    $data = $this->getrecord($course_id, $month);
-
-    // check for correct user   
-    if($data['tutor_id'] != $_SESSION['tutor_id']) {
-      redirect('courses');
+      // load view with data
+      $this->view('records/record', $data);
     }
+
+    if(AccessControl::is_logged_in_tutor()) {
+
+      // check for correct user   
+    // if($data['tutor_id'] != $_SESSION['tutor_id']) {
+    //   redirect('courses');
+    // }
 
     // update record
     if(isset($_POST['submit'])) {
@@ -80,10 +77,21 @@ class Records extends Controller {
       redirect('courses');
     } else {
 
+      // send user type
+      $data['user_type'] = 'tutor';
+
       // load view
-      $this->view('records/updaterecord', $data);
+      $this->view('records/record', $data);
     }  
+
+    }
+
+    
+
   }
+  
+  
+
 
   public function getrecord($course_id, $month){
 
@@ -92,15 +100,16 @@ class Records extends Controller {
     
     // prepare data: basic course info
     $data = [
-      'school_id' => $_SESSION['school_id'],
       'course_id' => $course_id,
-      'tutor_id' => $course['tutor_id'],
       'course_name' => $course['course_name'],
       'course_day' => $course['course_day'],
       'starts_at' => $course['starts_at'],
       'ends_at' => $course['ends_at'],
       'school_year' => $course['school_year']
     ];
+
+    // get school token
+    $data['school_token'] = $this->user_model->get_school_token_by_id($_SESSION['user_id']);
 
     
     /* *******************  REMAP MONTH VALUES ************************* 

@@ -11,8 +11,9 @@ courses/create: is it neccessary to have fn get student ids?
 - prepsat JS echo access php attendance array
 - prepsat pwd na password?
 
-LATER
-rename updaterecord to index
+LATER - RECORDS
+rename record to index and (to eliminate one level in links)
+poresit check for correct user
 
 
 3. JS 
