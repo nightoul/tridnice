@@ -1,8 +1,5 @@
 
 
-https://en.wikipedia.org/wiki/Role-based_access_control
-users rights system design
-
 
 - prepsat session school id tutor id atd na user id a pridat user type do seesions
 - sjednotit register school register tutor na signup, mozna totez u loginu
@@ -10,14 +7,13 @@ users rights system design
 
 courses/create: is it neccessary to have fn get student ids?
 
-- prepsat pwd na password?
 - two views updaterecord and showrecord? 
+- prepsat JS echo access php attendance array
+- prepsat pwd na password?
 
-2. localization
+LATER
+rename updaterecord to index
 
-- language do session az po loginu, before login JS handles it?
-- lokalizace contentu: PHP nebo JS? kombinace obojiho? err & flash msgs je jasny PHP ale content?
-- err a flash msgs asi nebude uzivatel sam definovat, stejne tak vetsinu contentu. co tim myslel jinyho?
 
 3. JS 
 - prepsat JS echo access php attendance array

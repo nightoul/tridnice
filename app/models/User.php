@@ -144,9 +144,9 @@ public function register_school($data) {
     }
   }
 
-  public function get_school_token_by_id($tutor_id){
+  public function get_school_token_by_id($id){
 
-    $this->conn->query("SELECT school_token FROM users WHERE user_id = '$tutor_id'");
+    $this->conn->query("SELECT school_token FROM users WHERE user_id = '$id'");
     $row = $this->conn->fetch_one();
 
     return $row['school_token'];
